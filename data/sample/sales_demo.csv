@@ -1,0 +1,5 @@
+date,store_id,product_id,category,price,units_sold,promo
+2026-09-27,HYD01,P101,Accessories,599,25,0
+2026-09-28,HYD01,P101,Accessories,599,18,0
+2026-09-29,HYD01,P101,Accessories,539.1,26,1
+2026-09-30,HYD01,P101,Accessories,599,21,0
