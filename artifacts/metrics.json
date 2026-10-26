@@ -1,0 +1,36 @@
+{
+  "dataset": "synthetic (simulation; not real retail transactions)",
+  "training_rows": 4384,
+  "validation_rows": 944,
+  "test_rows": 944,
+  "train_until_exclusive": "2026-06-05",
+  "test_from_inclusive": "2026-08-03",
+  "validation": {
+    "lightgbm": {
+      "mae": 4.1057,
+      "rmse": 5.2808,
+      "wape_pct": 19.241
+    },
+    "seasonal_naive": {
+      "mae": 6.3453,
+      "rmse": 8.1564,
+      "wape_pct": 29.736
+    }
+  },
+  "test": {
+    "lightgbm": {
+      "mae": 3.9598,
+      "rmse": 5.1873,
+      "wape_pct": 18.469
+    },
+    "seasonal_naive": {
+      "mae": 6.2203,
+      "rmse": 8.1321,
+      "wape_pct": 29.012
+    }
+  },
+  "selected_model": "lightgbm",
+  "selection_rule": "lowest validation WAPE; test was not used to select model",
+  "uncertainty_note": "Uncalibrated heuristic interval; not a validated coverage guarantee",
+  "model_limitations": "Forecasts of observed sales, not censored latent demand; synthetic data"
+}

@@ -1,0 +1,8 @@
+{
+  "data_source": "synthetic",
+  "start_date": "2025-08-07",
+  "end_date": "2026-09-30",
+  "rows": 6720,
+  "total_units": 137510,
+  "sku_store_series": 16
+}
