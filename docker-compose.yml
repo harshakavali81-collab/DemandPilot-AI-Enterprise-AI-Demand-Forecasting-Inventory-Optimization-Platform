@@ -1,0 +1,16 @@
+services:
+  api:
+    build: .
+    ports: ["8000:8000"]
+    command: sh -c "python scripts/bootstrap.py && uvicorn demandpilot.api.main:app --host 0.0.0.0 --port 8000"
+    volumes:
+      - project-data:/app/data/processed
+  dashboard:
+    build: .
+    depends_on: [api]
+    environment:
+      DEMANDPILOT_API_URL: http://api:8000
+    ports: ["8501:8501"]
+    command: streamlit run dashboard/app.py --server.address 0.0.0.0 --server.port 8501
+volumes:
+  project-data:
