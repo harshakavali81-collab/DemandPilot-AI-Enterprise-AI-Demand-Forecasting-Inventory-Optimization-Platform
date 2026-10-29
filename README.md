@@ -1,14 +1,43 @@
 # 📈 DemandPilot AI
 
-### End-to-end Demand Forecasting & Inventory Optimization Platform — Portfolio Demo
-
-[![CI](https://github.com/harshakavali81-collab/DemandPilot-AI-Enterprise-AI-Demand-Forecasting-Inventory-Optimization-Platform/actions/workflows/ci.yml/badge.svg)](https://github.com/harshakavali81-collab/DemandPilot-AI-Enterprise-AI-Demand-Forecasting-Inventory-Optimization-Platform/actions/workflows/ci.yml)
-
 **DemandPilot AI** demonstrates an integrated retail forecasting application built with Python, Pandas, LightGBM, scikit-learn, FastAPI, Streamlit, Plotly, SQLite and Docker Compose. It predicts daily observed sales and recommends reorder quantities using simulated inventory balances and supplier lead times.
 
-> **Important:** all bundled data is generated, not provided by real retailers. Forecast metrics, inventory balances and risk predictions are synthetic demonstration results. This is not a commercially validated inventory system and no live deployment has been verified.
+[Setup](#local-installation--setup-guide) · [Architecture](#architecture--system-design-diagram) · [Detailed guide](PROJECT_GUIDE.md) · [Repository standard](docs/REPOSITORY_STANDARD.md)
 
-## Quick start
+## Visuals
+
+![Measured model comparison on simulated data](<reports/figures/evaluation.svg>)
+
+Existing project visual; diagrams and illustrative graphics are not evidence of a deployed application.
+
+## Live Link / Demo
+
+Run the local demo using the setup guide below. No public deployment URL has been verified for this documentation update.
+
+## Key Features
+
+| Section | Features |
+|---|---|
+| Overview | SKU-store totals, simulated risk alerts, recommended units, indicative order costs |
+| Demand Forecast | Choose store/product, 7/14/30/60/90 days, daily plots, heuristic uncertainty ranges, CSV export |
+| Inventory Planner | What-if lead times, stock, on-order, backorders, error uncertainty, service-level target |
+| Model Evaluation | Seasonal baseline vs LightGBM; chronological validation and held-out test WAPE, MAE, RMSE |
+| API | `GET /health`, `GET /catalog`, `POST /forecast`, `GET /inventory/alerts`, `POST /inventory/recommend`, `GET /metrics` |
+| Engineering | Pytest, GitHub Actions CI, Docker Compose, Pydantic request validation, SQLite audit |
+
+![Measured model comparison on simulated data](reports/figures/evaluation.svg)
+
+## Tech Stack
+
+![Python](https://img.shields.io/badge/Python-334155?style=flat-square) ![FastAPI](https://img.shields.io/badge/FastAPI-334155?style=flat-square) ![Streamlit](https://img.shields.io/badge/Streamlit-334155?style=flat-square) ![scikit-learn](https://img.shields.io/badge/scikit--learn-334155?style=flat-square) ![Pandas](https://img.shields.io/badge/Pandas-334155?style=flat-square) ![NumPy](https://img.shields.io/badge/NumPy-334155?style=flat-square) ![LightGBM](https://img.shields.io/badge/LightGBM-334155?style=flat-square) ![Docker](https://img.shields.io/badge/Docker-334155?style=flat-square)
+
+Dependency versions and optional packages are defined in the repository manifests.
+
+## Architecture / System Design Diagram
+
+[Architecture documentation / diagram](<docs/architecture.md>)
+
+## Local Installation & Setup Guide
 
 Requires Python 3.10+ and an internet connection to install dependencies.
 
@@ -38,123 +67,44 @@ streamlit run dashboard/app.py
 
 `bootstrap.py` generates 420 days of daily sales for 8 products in 2 stores, writes SQLite tables, trains an actual LightGBM regression model, compares the baseline and exports model files and evaluation reports. No API key or paid cloud service is required.
 
-## Architecture diagram
+## Challenges & Solutions
 
-```mermaid
-flowchart TD
- A[Seeded synthetic sales and inventory] --> B[Daily data validation]
- B --> C[Time-safe lagged features]
- C --> D[Seasonal baseline vs LightGBM]
- D --> E[Chronological evaluation]
- E --> F[Trained forecast model]
- F --> G[Recursive 7, 14, 30 or 90-day forecasts]
- G --> H[Reorder point and order-up-to engine]
- I[Simulated inventory position and lead time] --> H
- H --> J[FastAPI service]
- G --> J
- J --> K[Streamlit charts and CSV export]
- J --> L[(SQLite prediction audit)]
-```
+**Repository organization:** this project uses `src/`. Keeping those paths stable avoids breaking imports, asset links and deployment commands while the documentation follows a shared format. Project-specific technical limitations and prior release evidence are retained in [Project guide](PROJECT_GUIDE.md).
 
-## Screens and key capabilities
+## Future Improvements
 
-| Section | Features |
-|---|---|
-| Overview | SKU-store totals, simulated risk alerts, recommended units, indicative order costs |
-| Demand Forecast | Choose store/product, 7/14/30/60/90 days, daily plots, heuristic uncertainty ranges, CSV export |
-| Inventory Planner | What-if lead times, stock, on-order, backorders, error uncertainty, service-level target |
-| Model Evaluation | Seasonal baseline vs LightGBM; chronological validation and held-out test WAPE, MAE, RMSE |
-| API | `GET /health`, `GET /catalog`, `POST /forecast`, `GET /inventory/alerts`, `POST /inventory/recommend`, `GET /metrics` |
-| Engineering | Pytest, GitHub Actions CI, Docker Compose, Pydantic request validation, SQLite audit |
+- Capture a reproducible end-to-end demo with runtime versions and sample inputs.
+- Expand regression checks for invalid inputs and documented edge cases.
+- Record measured results, data provenance and deployment limitations alongside each release.
 
-![Measured model comparison on simulated data](reports/figures/evaluation.svg)
+## Scope and supporting evidence
 
-## Complete source tree
+### End-to-end Demand Forecasting & Inventory Optimization Platform — Portfolio Demo
 
-```text
-DemandPilot-AI/
-├── .github/workflows/ci.yml
-├── .env.example
-├── .gitignore
-├── README.md
-├── pyproject.toml
-├── Dockerfile
-├── docker-compose.yml
-├── data/
-│   ├── raw/
-│   ├── processed/         # Generated data, gitignored
-│   └── sample/sales_demo.csv
-├── artifacts/             # Trained model and metrics generated on bootstrap
-├── src/demandpilot/
-│   ├── config.py
-│   ├── data/
-│   │   ├── generate.py
-│   │   └── validate.py
-│   ├── features/build_features.py
-│   ├── modeling/
-│   │   ├── train.py
-│   │   ├── forecast.py
-│   │   └── evaluate.py
-│   ├── inventory/optimizer.py
-│   ├── storage/database.py
-│   └── api/
-│       ├── schemas.py
-│       └── main.py
-├── dashboard/app.py
-├── notebooks/01_exploratory_analysis.ipynb
-├── scripts/
-│   ├── bootstrap.py
-│   ├── seed_demo.py
-│   ├── prepare_data.py
-│   ├── train_model.py
-│   ├── make_report.py
-│   └── forecast_example.py
-├── tests/
-│   ├── test_features.py
-│   ├── test_forecast.py
-│   ├── test_inventory.py
-│   ├── test_training.py
-│   └── test_api.py
-├── reports/figures/
-└── docs/
-    ├── architecture.md
-    ├── data_dictionary.md
-    ├── model_card.md
-    └── deployment.md
-```
+[](https://github.com/harshakavali81-collab/DemandPilot-AI-Enterprise-AI-Demand-Forecasting-Inventory-Optimization-Platform/actions/workflows/ci.yml)
 
-## How it works
+**DemandPilot AI** demonstrates an integrated retail forecasting application built with Python, Pandas, LightGBM, scikit-learn, FastAPI, Streamlit, Plotly, SQLite and Docker Compose. It predicts daily observed sales and recommends reorder quantities using simulated inventory balances and supplier lead times.
 
-1. **Generate and validate data:** synthetic retail sales, products, promotions and simulated stock are checked for invalid values, gaps and duplicate days.
-2. **Create forecasting features:** lag 1/7/14/28, trailing 7/28 means, historical standard deviation, calendar, price and promotions. Target-day sales never enter feature construction.
-3. **Select a model chronologically:** choose LightGBM or the last-week-same-day baseline by validation WAPE, then evaluate both on out-of-time test data.
-4. **Forecast demand:** recurse one day at a time, using prior model predictions for future unknown lags, never future actuals.
-5. **Make replenishment decisions:** calculate stock position, protection-window expected demand, safety stock, reorder point, order-up-to and recommended units. Stockout probability is an approximate Normal-model heuristic.
-6. **Serve the results:** FastAPI validates and persists forecast requests; Streamlit displays interactive charts and downloadable results.
-7. **Reproduce, test and package:** CI tests on Python 3.11/3.12; Docker Compose runs API and dashboard.
+> **Important:** all bundled data is generated, not provided by real retailers. Forecast metrics, inventory balances and risk predictions are synthetic demonstration results. This is not a commercially validated inventory system and no live deployment has been verified.
 
-## Measured synthetic holdout benchmark
+## Repository Structure
 
-These values were computed locally from seed 42, 420-day simulated history; they **are not real-business accuracy claims**.
+| Location | Purpose |
+| --- | --- |
+| `src/` | Source modules |
+| `tests/` | Tests |
+| `docs/` | Documentation |
+| `data/` | Data and samples |
+| `scripts/` | Automation scripts |
+| `.github/` | Issue forms, PR template and automated checks |
 
-| Model | Validation WAPE | Held-out one-step test WAPE |
-|---|---:|---:|
-| LightGBM | 19.241% | 18.469% |
-| Last-week seasonal naive | 29.736% | 29.012% |
+[Complete file inventory and workflow](docs/REPOSITORY_STANDARD.md). Runtime entry points retain their existing paths.
 
-MAE and RMSE are stored in the generated `artifacts/metrics.json`. These are **one-step** metrics only; a production-ready project must add rolling-origin multi-step backtests and independently calibrated prediction intervals.
+## Workflow & Tracking
 
-## Documentation
+Use the [bug and feature forms](https://github.com/harshakavali81-collab/DemandPilot-AI-Enterprise-AI-Demand-Forecasting-Inventory-Optimization-Platform/issues/new/choose) to define work with acceptance criteria. Keep tasks in Todo → In progress → Review → Done, and link a pull request with `Closes #<number>`. See [the maintenance workflow](docs/REPOSITORY_STANDARD.md#workflow).
 
-- [Architecture, data flow and APIs](docs/architecture.md)
-- [Data dictionary and provenance](docs/data_dictionary.md)
-- [Model card and limitations](docs/model_card.md)
-- [Installation, Docker and API examples](docs/deployment.md)
+## License
 
-## How to describe DemandPilot in interviews
+Original project software is available under the [MIT License](LICENSE). See [licensing scope](docs/LICENSING.md) for third-party and data exclusions.
 
-> Designed and implemented DemandPilot AI, an end-to-end machine learning demand forecasting and inventory decision-support demo. Built time-safe features and chronological LightGBM evaluation against a seasonal baseline, served recursive forecasts using FastAPI, and created Streamlit dashboards and a stock replenishment engine. Added SQLite persistence, API testing, CI, and Docker Compose. Validated results on reproducible simulated retail data.
-
-**Future work:** use licensed real-world datasets, stockout demand-censoring corrections, dedicated multi-horizon backtesting, properly calibrated intervals, real supplier lead-time distributions, model drift monitoring, authentication and cloud deployment.
-
-Maintained by [harshakavali81-collab](https://github.com/harshakavali81-collab).
